@@ -1,10 +1,10 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { GoogleGenAI } from "@google/genai";
 
 export async function getTacticalAdvice(score: number, difficulty: string) {
   try {
+    // Initialize inside function to ensure environment variables are loaded
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Current Score: ${score}. Difficulty: ${difficulty}. 

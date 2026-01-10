@@ -108,15 +108,28 @@ const App: React.FC = () => {
       }
 
       const key = e.key.toLowerCase();
-      if (['arrowup', 'w'].includes(key) && direction !== Direction.DOWN) setNextDirection(Direction.UP);
-      if (['arrowdown', 's'].includes(key) && direction !== Direction.UP) setNextDirection(Direction.DOWN);
-      if (['arrowleft', 'a'].includes(key) && direction !== Direction.RIGHT) setNextDirection(Direction.LEFT);
-      if (['arrowright', 'd'].includes(key) && direction !== Direction.LEFT) setNextDirection(Direction.RIGHT);
+      
+      // Control Handling
+      if (gameState === GameState.PLAYING || gameState === GameState.COUNTDOWN) {
+        if (['arrowup', 'w'].includes(key) && direction !== Direction.DOWN) setNextDirection(Direction.UP);
+        if (['arrowdown', 's'].includes(key) && direction !== Direction.UP) setNextDirection(Direction.DOWN);
+        if (['arrowleft', 'a'].includes(key) && direction !== Direction.RIGHT) setNextDirection(Direction.LEFT);
+        if (['arrowright', 'd'].includes(key) && direction !== Direction.LEFT) setNextDirection(Direction.RIGHT);
+      }
 
-      if (key === 'p' && gameState === GameState.PLAYING) setGameState(GameState.PAUSED);
-      if (key === 'p' && gameState === GameState.PAUSED) setGameState(GameState.PLAYING);
+      // Action Toggles
+      if (key === 'p') {
+        if (gameState === GameState.PLAYING) {
+          setGameState(GameState.PAUSED);
+          audioService.playMenuSelect();
+        } else if (gameState === GameState.PAUSED) {
+          setGameState(GameState.PLAYING);
+          audioService.playMenuSelect();
+        }
+      }
+      
       if (key === ' ' && gameState === GameState.PLAYING) setIsBoosted(true);
-      if (key === 'escape') setGameState(GameState.START);
+      if (key === 'escape' && (gameState === GameState.PLAYING || gameState === GameState.PAUSED)) setGameState(GameState.START);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -259,7 +272,7 @@ const App: React.FC = () => {
     } else {
       const speed = isBoosted ? currentDifficulty.speed / 2.5 : currentDifficulty.speed;
       setFoodPulse(Math.sin(time / 150) * 4);
-      if (time - lastTickRef.current > speed) {
+      if (gameState === GameState.PLAYING && time - lastTickRef.current > speed) {
         tick();
         lastTickRef.current = time;
       }
@@ -353,8 +366,8 @@ const App: React.FC = () => {
               <h2 className="text-6xl font-black text-white italic mb-12 tracking-tighter">AG~3 // <span className="text-cyan-400">OS</span></h2>
               <div className="flex flex-col gap-4 w-64">
                 <button onClick={() => { audioService.playMenuSelect(); resetGame(); }} className="px-6 py-3 bg-white text-black font-black uppercase tracking-widest hover:bg-cyan-400 transition-all">Launch Mission</button>
-                <button onClick={() => setGameState(GameState.LEVEL_SELECT)} className="px-6 py-3 border border-white text-white font-bold uppercase tracking-widest">Difficulty</button>
-                <button onClick={() => setGameState(GameState.SETTINGS)} className="px-6 py-3 border border-white text-white font-bold uppercase tracking-widest">Themes</button>
+                <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.LEVEL_SELECT); }} className="px-6 py-3 border border-white text-white font-bold uppercase tracking-widest">Difficulty</button>
+                <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.SETTINGS); }} className="px-6 py-3 border border-white text-white font-bold uppercase tracking-widest">Themes</button>
               </div>
             </div>
           )}
@@ -364,10 +377,10 @@ const App: React.FC = () => {
               <h3 className="text-4xl font-black text-white mb-8 italic uppercase">Neural Frequency</h3>
               <div className="flex flex-col gap-4 w-64">
                 {DIFFICULTIES.map((d, i) => (
-                  <button key={d.name} onClick={() => { setDifficultyIdx(i); setGameState(GameState.START); }} className={`px-6 py-3 border font-black uppercase ${difficultyIdx === i ? 'bg-white text-black' : 'text-gray-400 border-gray-400'}`} style={{ color: difficultyIdx === i ? '#000' : d.color }}>{d.name}</button>
+                  <button key={d.name} onClick={() => { audioService.playMenuSelect(); setDifficultyIdx(i); setGameState(GameState.START); }} className={`px-6 py-3 border font-black uppercase transition-all duration-200 ${difficultyIdx === i ? 'bg-white text-black scale-105' : 'text-gray-400 border-gray-400 hover:border-white'}`} style={{ color: difficultyIdx === i ? '#000' : d.color }}>{d.name}</button>
                 ))}
               </div>
-              <button onClick={() => setGameState(GameState.START)} className="mt-8 text-white font-mono uppercase text-sm border-b border-white">Back</button>
+              <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.START); }} className="mt-8 text-white font-mono uppercase text-sm border-b border-white">Back</button>
             </div>
           )}
 
@@ -384,7 +397,17 @@ const App: React.FC = () => {
                   <button key={t.name} onClick={() => handleThemeChange(i)} className={`px-6 py-3 border-2 font-black uppercase transition-all duration-300 ${themeIdx === i ? 'bg-white text-black pulse-glow' : 'text-gray-400 border-gray-400'}`} style={{ '--glow-color': t.accent } as any}>{t.name}</button>
                 ))}
               </div>
-              <button onClick={() => setGameState(GameState.START)} className="mt-8 text-white font-mono uppercase text-sm border-b border-white">Back</button>
+              <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.START); }} className="mt-8 text-white font-mono uppercase text-sm border-b border-white">Back</button>
+            </div>
+          )}
+
+          {gameState === GameState.PAUSED && (
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center z-40">
+              <h2 className="text-5xl font-black text-white italic tracking-tighter mb-8 animate-pulse">SYSTEM SUSPENDED</h2>
+              <div className="flex flex-col gap-4 w-64">
+                <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.PLAYING); }} className="px-6 py-3 bg-cyan-400 text-black font-black uppercase tracking-widest">Resume</button>
+                <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.START); }} className="px-6 py-3 border border-white text-white font-bold uppercase tracking-widest">Quit to Menu</button>
+              </div>
             </div>
           )}
 
@@ -404,7 +427,7 @@ const App: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-3 w-full max-w-[400px]">
                     <button onClick={() => { audioService.playMenuSelect(); resetGame(); }} className="px-6 py-4 bg-white text-black font-black uppercase tracking-widest">REBOOT</button>
-                    <button onClick={() => setGameState(GameState.START)} className="px-6 py-4 border-2 border-white/20 text-white font-black uppercase tracking-widest">LOGOFF</button>
+                    <button onClick={() => { audioService.playMenuSelect(); setGameState(GameState.START); }} className="px-6 py-4 border-2 border-white/20 text-white font-black uppercase tracking-widest">LOGOFF</button>
                 </div>
             </div>
           )}

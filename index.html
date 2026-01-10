@@ -45,6 +45,13 @@
         .pulse-glow {
             animation: pulse-glow 2s infinite ease-in-out;
         }
+        .theme-surge {
+            animation: theme-surge-anim 0.5s ease-out;
+        }
+        @keyframes theme-surge-anim {
+            0% { filter: brightness(3) saturate(2); transform: scale(1.05); }
+            100% { filter: brightness(1) saturate(1); transform: scale(1); }
+        }
     </style>
 <script type="importmap">
 {

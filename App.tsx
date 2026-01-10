@@ -295,8 +295,57 @@ const App: React.FC = () => {
       ctx.fillStyle = foodColor; ctx.beginPath(); ctx.arc(food.x * GRID_SIZE + GRID_SIZE / 2, food.y * GRID_SIZE + GRID_SIZE / 2, 8 + Math.abs(foodPulse), 0, Math.PI * 2); ctx.fill();
 
       snake.forEach((s, i) => {
-        ctx.fillStyle = i === 0 ? currentTheme.head : currentTheme.body;
-        ctx.beginPath(); ctx.roundRect(s.x * GRID_SIZE + 1, s.y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2, 4); ctx.fill();
+        const x = s.x * GRID_SIZE;
+        const y = s.y * GRID_SIZE;
+        
+        if (i === 0) {
+          // Draw Head with Eyes and Tongue
+          ctx.fillStyle = currentTheme.head;
+          ctx.beginPath(); ctx.roundRect(x + 1, y + 1, GRID_SIZE - 2, GRID_SIZE - 2, 6); ctx.fill();
+
+          // Eyes logic
+          ctx.fillStyle = '#ffffff';
+          const eyeSize = 3;
+          if (direction === Direction.RIGHT) {
+            ctx.fillRect(x + GRID_SIZE - 8, y + 5, eyeSize, eyeSize);
+            ctx.fillRect(x + GRID_SIZE - 8, y + GRID_SIZE - 8, eyeSize, eyeSize);
+          } else if (direction === Direction.LEFT) {
+            ctx.fillRect(x + 5, y + 5, eyeSize, eyeSize);
+            ctx.fillRect(x + 5, y + GRID_SIZE - 8, eyeSize, eyeSize);
+          } else if (direction === Direction.UP) {
+            ctx.fillRect(x + 5, y + 5, eyeSize, eyeSize);
+            ctx.fillRect(x + GRID_SIZE - 8, y + 5, eyeSize, eyeSize);
+          } else if (direction === Direction.DOWN) {
+            ctx.fillRect(x + 5, y + GRID_SIZE - 8, eyeSize, eyeSize);
+            ctx.fillRect(x + GRID_SIZE - 8, y + GRID_SIZE - 8, eyeSize, eyeSize);
+          }
+
+          // Tongue logic (flickers based on time)
+          if (Math.floor(time / 250) % 2 === 0) {
+            ctx.strokeStyle = '#ff3c3c';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            const tx = x + GRID_SIZE / 2;
+            const ty = y + GRID_SIZE / 2;
+            if (direction === Direction.RIGHT) {
+              ctx.moveTo(x + GRID_SIZE - 1, ty); ctx.lineTo(x + GRID_SIZE + 6, ty);
+              ctx.lineTo(x + GRID_SIZE + 8, ty - 3); ctx.moveTo(x + GRID_SIZE + 6, ty); ctx.lineTo(x + GRID_SIZE + 8, ty + 3);
+            } else if (direction === Direction.LEFT) {
+              ctx.moveTo(x + 1, ty); ctx.lineTo(x - 6, ty);
+              ctx.lineTo(x - 8, ty - 3); ctx.moveTo(x - 6, ty); ctx.lineTo(x - 8, ty + 3);
+            } else if (direction === Direction.UP) {
+              ctx.moveTo(tx, y + 1); ctx.lineTo(tx, y - 6);
+              ctx.lineTo(tx - 3, y - 8); ctx.moveTo(tx, y - 6); ctx.lineTo(tx + 3, y - 8);
+            } else if (direction === Direction.DOWN) {
+              ctx.moveTo(tx, y + GRID_SIZE - 1); ctx.lineTo(tx, y + GRID_SIZE + 6);
+              ctx.lineTo(tx - 3, y + GRID_SIZE + 8); ctx.moveTo(tx, y + GRID_SIZE + 6); ctx.lineTo(tx + 3, y + GRID_SIZE + 8);
+            }
+            ctx.stroke();
+          }
+        } else {
+          ctx.fillStyle = currentTheme.body;
+          ctx.beginPath(); ctx.roundRect(x + 1, y + 1, GRID_SIZE - 2, GRID_SIZE - 2, 4); ctx.fill();
+        }
       });
 
       particlesRef.current.forEach(p => { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); }); ctx.globalAlpha = 1.0;
@@ -304,7 +353,7 @@ const App: React.FC = () => {
 
     if (shake > 0) setShake(s => s - 1);
     requestRef.current = requestAnimationFrame(animate);
-  }, [tick, currentDifficulty, isBoosted, currentTheme, food, isGoldFood, snake, obstacles, shake, foodPulse, gameState]);
+  }, [tick, currentDifficulty, isBoosted, currentTheme, food, isGoldFood, snake, obstacles, shake, foodPulse, gameState, direction]);
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);

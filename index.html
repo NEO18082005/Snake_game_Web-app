@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AG~3 OS Snake</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -15,18 +16,21 @@
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             user-select: none;
+            touch-action: none;
         }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        
+        @keyframes glitch-static {
+            0% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
+            50% { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; }
+            100% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
         }
-        .glitch-text:hover {
-            animation: glitch 0.3s infinite;
+        
+        .glitch-text {
+            animation: glitch-static 4s infinite linear;
+            display: inline-block;
+            pointer-events: none;
+            color: #00bfff; /* Lambo Cyan */
         }
 
         @keyframes pulse-glow {
@@ -42,28 +46,22 @@
         .pulse-glow {
             animation: pulse-glow 2s infinite ease-in-out;
         }
-
-        @keyframes theme-surge {
-            0% { transform: scale(1); filter: brightness(1); }
-            20% { transform: scale(1.1); filter: brightness(2); }
-            100% { transform: scale(1); filter: brightness(1); }
-        }
-        .theme-surge {
-            animation: theme-surge 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
     </style>
 <script type="importmap">
 {
   "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
     "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
 <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

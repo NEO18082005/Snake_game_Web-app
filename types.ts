@@ -48,3 +48,9 @@ export interface Particle {
   color: string;
   size: number;
 }
+
+export interface SessionStats {
+  duration: number;
+  growth: number;
+  efficiency: number;
+}

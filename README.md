@@ -1,1 +1,44 @@
-Live demo / Vercel: 🚀  https://tech-os-snake.vercel.app()/n/n---/n/n## Table of Contents 📚/n- Features/n- Tech Stack/n- Prerequisites/n- Installation/n- Configuration/n- Development/n- Build & Production/n- Project Structure/n- Scripts/n- Testing/n- Contributing/n- License/n- Author & Contact/n/n---/n/n## Features ✨/n- Classic Snake gameplay with smooth controls and canvas rendering 🎮/n- Score tracking and high-score persistence (localStorage) 🏆/n- Configurable difficulty / speed ⚡/n- Responsive layout and mobile-friendly controls 📱/n- Simple, extensible game logic for easy feature additions 🛠️/n/n## Tech Stack ⚙️/n- Node.js, npm/n- Frontend: HTML / CSS / JavaScript (adjust if using a framework like React / Next.js / Vite)/n- Optional integration: Gemini (for AI features) 🔐/n/n## Prerequisites ✅/n- Node.js (v14+ recommended)/n- npm (v6+)/n- If using AI features: GEMINI_API_KEY/n/n## Installation 🧩/n1. Clone the repo:/ngit clone https://github.com/NEO18082005/Snake_game_Web-app.git/n2. Enter the project directory:/ncd Snake_game_Web-app/n3. Install dependencies:/nnpm install/n/n## Configuration 🔒/n- Create a `.env.local` file in the project root (do NOT commit secrets)./n- Example:/n  GEMINI_API_KEY=your_gemini_api_key_here/n/n## Development 🛠️/n- Start the dev server (with live reload):/nnpm run dev  /n- Open http://localhost:3000 (or the port shown by your dev server) to play and develop./n/n## Build & Production 🚀/n- Build for production:/nnpm run build/n- Serve the production build locally:/nnpm run start/n- Deploy the built assets to your preferred host (Vercel, Netlify, GitHub Pages, or a Node server). Configure the build command and publish directory depending on your framework./n/n## Project Structure 📁 (example)/n- /public — static assets and images/n- /src — source code (components, styles, game logic)/n  - /src/game — core game engine and logic/n  - /src/ui — UI components and menus/n- package.json — scripts & dependencies/n- .env.local — local environment variables (not committed)/n/n## Scripts 🧭/n- npm run dev — start development server/n- npm run build — build production bundle/n- npm run start — serve production bundle/n- npm test — run tests (if configured)/n/n## Testing 🧪/n- Recommended: Jest for unit tests, Playwright or Cypress for E2E tests./n- Add tests for game logic and UI flows to ensure stability as you extend features./n/n## Contributing 🤝/nContributions are welcome!/n1. Fork the repository/n2. Create a feature branch: git checkout -b feat/your-feature/n3. Commit your changes: git commit -m "Add feature"/n4. Push and open a Pull Request/n/nPlease include clear commit messages and tests for new features where possible. Report bugs or suggest enhancements via GitHub Issues with steps to reproduce./n/n## License 📜/nThis project is licensed under the MIT License — see the LICENSE file for details./n/n## Author & Contact ✉️/n- Subhan Khan  /n- Repository: https://github.com/NEO18082005/Snake_game_Web-app
+# 🐍 Tech-OS Snake
+
+A modern, high-performance Snake game built with web technologies, featuring AI-driven enhancements and smooth canvas rendering.
+
+**[Live Demo 🚀](https://tech-os-snake.vercel.app/)**
+
+---
+
+## Table of Contents 📚
+* [Features ✨](#features-)
+* [Tech Stack ⚙️](#tech-stack-️)
+* [Project Structure 📁](#project-structure-)
+* [Getting Started 🏁](#getting-started-)
+* [Configuration 🔒](#configuration-)
+* [Scripts 🧭](#scripts-)
+* [Contributing 🤝](#contributing-)
+* [License 📜](#license-)
+
+---
+
+## Features ✨
+* **Smooth Gameplay:** Optimized canvas rendering for lag-free movement. 🎮
+* **Persistence:** High-score tracking via `localStorage` so your progress stays saved. 🏆
+* **Dynamic Difficulty:** Configurable speed settings to challenge any skill level. ⚡
+* **Responsive Design:** Fully playable on desktop and mobile with touch-friendly controls. 📱
+* **AI Integration:** Experimental features powered by the **Gemini API**. 🤖
+
+## Tech Stack ⚙️
+* **Frontend:** HTML5 Canvas, CSS3, JavaScript (ES6+)
+* **Deployment:** [Vercel](https://vercel.app)
+* **AI Engine:** Google Gemini SDK
+* **Environment:** Node.js & npm
+
+---
+
+## Project Structure 📁
+```text
+├── public/          # Static assets (images, icons, sounds)
+├── src/             # Source code
+│   ├── game/        # Core engine, collision logic, and movement
+│   └── ui/          # Menus, overlays, and HUD components
+├── .env.local       # Environment variables (ignored by git)
+├── package.json     # Project metadata and dependencies
+└── README.md        # Project documentation
